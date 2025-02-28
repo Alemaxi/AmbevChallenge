@@ -8,13 +8,15 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
 {
     public class ProductRating
     {
+        public Guid Id { get; set; }
+
         /// <summary>
-        /// Valor da avaliação do produto.
+        /// Product Assessment value
         /// </summary>
         public double Rate { get; set; }
 
         /// <summary>
-        /// Quantidade de avaliações.
+        /// Assessment quantity
         /// </summary>
         public int Count { get; set; }
     }

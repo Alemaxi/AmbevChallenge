@@ -48,5 +48,13 @@ namespace Ambev.DeveloperEvaluation.Domain.Repositories
         /// <param name="cancellationToken">Token de cancelamento.</param>
         /// <returns>True se o produto foi excluído; false caso não tenha sido encontrado.</returns>
         Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Exclui um produto do repositório.
+        /// </summary>
+        /// <param name="id">O identificador único do produto a ser excluído.</param>
+        /// <param name="cancellationToken">Token de cancelamento.</param>
+        /// <returns>True se o produto foi excluído; false caso não tenha sido encontrado.</returns>
+        Task<List<Product>> GetAllPaginated(int page, int size, string order, CancellationToken cancellationToken = default);
     }
 }

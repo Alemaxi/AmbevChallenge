@@ -1,8 +1,9 @@
-﻿using Ambev.DeveloperEvaluation.WebApi.Features.Products.Shared;
+﻿using Ambev.DeveloperEvaluation.Application.Products.Shared.ProductRatingCommandShared;
+using MediatR;
 
-namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.CreateProduct
+namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
 {
-    public class CreateProductRequest
+    public class CreateProductCommand : IRequest<CreateProductResult>
     {
         /// <summary>
         /// Título do produto
@@ -17,12 +18,12 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.CreateProduct
         /// <summary>
         /// Descrição do produto
         /// </summary>
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// Categoria do produto
         /// </summary>
-        public string Category { get; set; }
+        public string Category { get; set; } = string.Empty;
 
         /// <summary>
         /// URL da imagem do produto
@@ -32,6 +33,6 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.CreateProduct
         /// <summary>
         /// Informações sobre a avaliação do produto
         /// </summary>
-        public ProductRatingDTO Rating { get; set; } = new ProductRatingDTO();
+        public ProductRatingCommand Rating { get; set; } = new ProductRatingCommand();
     }
 }

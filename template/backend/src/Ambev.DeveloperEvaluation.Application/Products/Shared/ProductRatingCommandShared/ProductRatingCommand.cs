@@ -1,6 +1,6 @@
-﻿namespace Ambev.DeveloperEvaluation.WebApi.Features.Products.Shared
+﻿namespace Ambev.DeveloperEvaluation.Application.Products.Shared.ProductRatingCommandShared
 {
-    public class ProductRatingDTO
+    public class ProductRatingCommand
     {
         /// <summary>
         /// Valor da avaliação do produto
