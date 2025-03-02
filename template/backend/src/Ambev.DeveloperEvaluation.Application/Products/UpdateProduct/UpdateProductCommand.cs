@@ -6,32 +6,37 @@ namespace Ambev.DeveloperEvaluation.Application.Products.UpdateProduct
     public class UpdateProductCommand : IRequest<UpdateProductResult>
     {
         /// <summary>
-        /// Título do produto
+        /// Product Id
+        /// </summary>
+        public Guid Id { get; set; }
+
+        /// <summary>
+        /// Product title
         /// </summary>
         public string Title { get; set; }
 
         /// <summary>
-        /// Preço do produto
+        /// Product price
         /// </summary>
         public decimal Price { get; set; }
 
         /// <summary>
-        /// Descrição do produto
+        /// Product descritption
         /// </summary>
         public string Description { get; set; } = string.Empty;
 
         /// <summary>
-        /// Categoria do produto
+        /// Product category
         /// </summary>
         public string Category { get; set; } = string.Empty;
 
         /// <summary>
-        /// URL da imagem do produto
+        /// Prouduct image Url
         /// </summary>
         public string Image { get; set; }
 
         /// <summary>
-        /// Informações sobre a avaliação do produto
+        /// Product Rating informations
         /// </summary>
         public ProductRatingCommand Rating { get; set; } = new ProductRatingCommand();
     }

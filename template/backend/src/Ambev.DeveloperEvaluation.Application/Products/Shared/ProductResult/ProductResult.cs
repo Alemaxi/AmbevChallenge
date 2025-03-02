@@ -1,6 +1,6 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Products.Shared.ProductRatingCommandShared;
 
-namespace Ambev.DeveloperEvaluation.Application.Products.ListProduct
+namespace Ambev.DeveloperEvaluation.Application.Products.Shared.ProductResult
 {
     public class ProductResult
     {

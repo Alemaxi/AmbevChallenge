@@ -1,23 +1,20 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Repositories;
+﻿using Ambev.DeveloperEvaluation.Application.Util;
+using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
 using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Products.GetProduct
 {
-    public class GetProductHandler : IRequestHandler<GetProductCommand, GetProductResult>
+    public class GetProductHandler : GenericHandler<GetProductCommand, GetProductResult, GetProductCommandValidator>
     {
-        private readonly IProductRepository _repository;
-        private readonly IMapper _mapper;
 
-        public GetProductHandler(IProductRepository repository, IMapper mapper)
+        public GetProductHandler(IUnitOfWork unitOfWork, IMapper mapper): base(unitOfWork,mapper)
         {
-            _repository = repository;
-            _mapper = mapper;
         }
 
-        public async Task<GetProductResult> Handle(GetProductCommand request, CancellationToken cancellationToken)
+        public override async Task<GetProductResult> ExecuteHandlerCode(GetProductCommand request, CancellationToken cancelation)
         {
-            var product = await _repository.GetByIdAsync(request.Id);
+            var product = await _unitOfWork.Products.GetByIdAsync(request.Id);
 
             return _mapper.Map<GetProductResult>(product);
         }

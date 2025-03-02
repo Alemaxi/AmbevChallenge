@@ -1,6 +1,6 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Products.CreateProduct;
-using Ambev.DeveloperEvaluation.Application.Products.ListProduct;
 using Ambev.DeveloperEvaluation.Application.Products.Shared.ProductRatingCommandShared;
+using Ambev.DeveloperEvaluation.Application.Products.Shared.ProductResult;
 using Bogus;
 using System;
 using System.Collections.Generic;

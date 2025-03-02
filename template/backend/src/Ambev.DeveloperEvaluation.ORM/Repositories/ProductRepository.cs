@@ -7,65 +7,23 @@ using System.Linq.Dynamic.Core;
 
 namespace Ambev.DeveloperEvaluation.ORM.Repositories
 {
-    public class ProductRepository : IProductRepository
+    public class ProductRepository : GenericRepository<Product>, IProductRepository
     {
-        private readonly DefaultContext _context;
 
-        public ProductRepository(DefaultContext context)
+        public ProductRepository(DefaultContext context): base(context) { }
+
+        public async Task<List<string>> ListCategories()
         {
-            _context = context;
+            return await _context.Products.AsNoTracking().Select(p => p.Category).Distinct().ToListAsync();
         }
 
-        public async Task<Product> CreateAsync(Product product, CancellationToken cancellationToken = default)
+        public async Task<List<Product>> ListProductsByCategory(string category, int page, int size, string orderBy)
         {
-            _context.Products.Add(product);
-            return product;
-        }
+            var query = _context.Products.AsNoTracking().Where(p => p.Equals(category));
 
-        public async Task<bool> DeleteAsync(Guid id, CancellationToken cancellationToken = default)
-        {
-            var product = await _context.Products.FindAsync(new object[] { id }, cancellationToken);
-            if (product == null)
-            {
-                return false;
-            }
+            query = !string.IsNullOrEmpty(orderBy) ? query.OrderBy(orderBy) : query;
 
-            _context.Products.Remove(product);
-            return true;
-        }
-
-        public async Task<List<Product>> GetAllPaginated(int page, int size, string order, CancellationToken cancellationToken)
-        {
-            var query = _context.Products.AsQueryable();
-
-            // Aplicar ordenação dinâmica se o parâmetro for informado
-            if (!string.IsNullOrWhiteSpace(order))
-            {
-                query = query.OrderBy(order);
-            }
-
-            var items = await query
-                .Skip((page - 1) * size)
-                .Take(size)
-                .ToListAsync(cancellationToken);
-
-            return items;
-        }
-
-        public async Task<Product?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
-        {
-            return await _context.Products.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
-        }
-
-        public async Task<Product?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
-        {
-            return await _context.Products.FirstOrDefaultAsync(p => p.Title == name, cancellationToken);
-        }
-
-        public async Task<Product> UpdateAsync(Product product, CancellationToken cancellationToken = default)
-        {
-            _context.Products.Update(product);
-            return product;
+            return await query.Skip((page - 1) * size).Take(size).ToListAsync();
         }
     }
 }

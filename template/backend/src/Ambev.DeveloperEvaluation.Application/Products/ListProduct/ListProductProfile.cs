@@ -1,4 +1,5 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Application.Products.Shared.ProductResult;
+using Ambev.DeveloperEvaluation.Domain.Entities;
 using AutoMapper;
 using System;
 using System.Collections.Generic;

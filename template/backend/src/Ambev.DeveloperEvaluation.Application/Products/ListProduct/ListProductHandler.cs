@@ -1,29 +1,29 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Application.Util;
+using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
 using MediatR;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using System.Threading;
+using Ambev.DeveloperEvaluation.Application.Products.Shared.ProductResult;
 
 namespace Ambev.DeveloperEvaluation.Application.Products.ListProduct
 {
-    public class ListProductHandler : IRequestHandler<ListProductCommand, ListProductResult>
+    public class ListProductHandler : GenericHandler<ListProductCommand, ListProductResult, ListProductCommandValidator>
     {
-        private readonly IProductRepository _repository;
-        private readonly IMapper _mapper;
 
-        public ListProductHandler(IProductRepository repository, IMapper mapper)
+        public ListProductHandler(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
-            _repository = repository;
-            _mapper = mapper;
         }
 
-        public async Task<ListProductResult> Handle(ListProductCommand command, CancellationToken cancellationToken)
+        public async override Task<ListProductResult> ExecuteHandlerCode(ListProductCommand request, CancellationToken cancelation)
         {
-            var result = await _repository.GetAllPaginated(command.Page, command.Size, command.Order, cancellationToken);
+            var result = await _unitOfWork.Products.GetAllPaginatedAsync(request.Page, request.Size, request.Order, cancelation);
             return new ListProductResult
             {
                 Count = result.Count(),
-                Page = command.Page,
-                Size = command.Size,
+                Page = request.Page,
+                Size = request.Size,
                 Produtos = result.Select(product => _mapper.Map<ProductResult>(product)).ToList()
             };
         }

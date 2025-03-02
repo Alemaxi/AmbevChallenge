@@ -6,22 +6,24 @@ using Ambev.DeveloperEvaluation.Domain.Repositories;
 using Ambev.DeveloperEvaluation.Unit.Application.TestData;
 using AutoMapper;
 using FluentAssertions;
+using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using Xunit;
 
-namespace Ambev.DeveloperEvaluation.Unit.Application
+namespace Ambev.DeveloperEvaluation.Unit.Application.Products
 {
     public class CreateProductHandlerTest
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly CreateProductHandler _handler;
         private readonly IMapper _mapper;
 
         public CreateProductHandlerTest()
         {
-            _productRepository = Substitute.For<IProductRepository>();
+            _unitOfWork = Substitute.For<IUnitOfWork>();
             _mapper = Substitute.For<IMapper>();
-            _handler = new CreateProductHandler(_productRepository, _mapper);
+            _handler = new CreateProductHandler(_unitOfWork, _mapper);
         }
 
         // It tests if the all calls needed to create a new product will be made. That test assumes that's a valid command since the validation happens on controller.
@@ -65,7 +67,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
             _mapper.Map<Product>(command).Returns(product);
             _mapper.Map<CreateProductResult>(product).Returns(result);
 
-            _productRepository.CreateAsync(Arg.Any<Product>(), Arg.Any<CancellationToken>())
+            _unitOfWork.Products.CreateAsync(Arg.Any<Product>(), Arg.Any<CancellationToken>())
                 .Returns(product);
 
             // Act
@@ -80,7 +82,20 @@ namespace Ambev.DeveloperEvaluation.Unit.Application
             createResult.Title.Should().Be(product.Title);
             createResult.Rating.Count.Should().Be(product.Rating.Count);
             createResult.Rating.Rate.Should().Be(product.Rating.Rate);
-            await _productRepository.Received(1).CreateAsync(Arg.Any<Product>(), Arg.Any<CancellationToken>());
+            await _unitOfWork.Received(2).Products.CreateAsync(Arg.Any<Product>(), Arg.Any<CancellationToken>());
+        }
+
+        [Fact(DisplayName = "Tests the createProduct action with an invalid command -> should fail")]
+        public async Task Tests_CreateProduct_With_Invalid_Command()
+        {
+            var command = new CreateProductCommand();
+
+            var exception = await Assert.ThrowsAsync<ValidationException>(() => _handler.Handle(command, CancellationToken.None));
+
+            Assert.Contains("The product title is required", exception.Message);
+            Assert.Contains("The product description is required.", exception.Message);
+            Assert.Contains("The product category is required.", exception.Message);
+            Assert.Contains("The product price must be greater than zero.", exception.Message);
         }
     }
 }

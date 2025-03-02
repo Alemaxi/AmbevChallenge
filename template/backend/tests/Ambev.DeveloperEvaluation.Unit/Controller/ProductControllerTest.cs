@@ -1,6 +1,11 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Products.CreateProduct;
 using Ambev.DeveloperEvaluation.Application.Products.GetProduct;
+using Ambev.DeveloperEvaluation.Application.Products.GetProductsByCategory;
+using Ambev.DeveloperEvaluation.Application.Products.ListCategories;
 using Ambev.DeveloperEvaluation.Application.Products.ListProduct;
+using Ambev.DeveloperEvaluation.Application.Products.Shared.ProductResult;
+using Ambev.DeveloperEvaluation.Application.Products.UpdateProduct;
+using Ambev.DeveloperEvaluation.ORM;
 using Ambev.DeveloperEvaluation.Unit.Controller.TestData;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using Ambev.DeveloperEvaluation.WebApi.Features.Products;
@@ -53,21 +58,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Controller
             await _mediator.Received(1).Send(Arg.Any<CreateProductCommand>());
         }
 
-        [Fact(DisplayName = "Tests the createProduct action with an invalid command -> should fail")]
-        public async Task Tests_CreateProduct_With_Invalid_Command()
-        {
-            var command = new CreateProductCommand();
-
-
-            var exception = await Assert.ThrowsAsync<ValidationException>(() => _controller.CreateProduct(command));
-
-            Assert.Contains("The product title is required", exception.Message);
-            Assert.Contains("The product description is required.", exception.Message);
-            Assert.Contains("The product category is required.", exception.Message);
-            Assert.Contains("The product price must be greater than zero.", exception.Message);
-        }
-
-        [Fact(DisplayName = "Tests ListProducts action passing no parameter - will be used default params")]
+        [Fact(DisplayName = "Tests ListProducts action passing no parameter")]
         public async Task Tests_ListProducts()
         {
             var listProductResult = new ListProductResult
@@ -87,22 +78,8 @@ namespace Ambev.DeveloperEvaluation.Unit.Controller
             (returned as ObjectResult)!.Value.Should().NotBeNull();
         }
 
-        [Theory(DisplayName = "Tests ListProducts action passing no parameter - will be used default params")]
-        [InlineData(0,0)]
-        [InlineData(0,10)]
-        [InlineData(1,0)]
-        public async Task Tests_ListProducts_With_Invalid_Params(int page, int size)
-        {
-            var exception = await Assert.ThrowsAsync<ValidationException>( () => _controller.ListProducts(new ListProductCommand { Page = page, Size = size }));
-
-            if(page == 0)
-            Assert.Contains("'Page' deve ser superior ou igual a '1'", exception.Message);
-            if(size == 0)
-            Assert.Contains("'Size' deve ser superior ou igual a '1'", exception.Message);
-        }
-
-        [Fact(DisplayName = "Tests GetProductResult action passing a valid Guid ID")]
-        public async Task Tests_GetProduct_With_Valid_Id()
+        [Fact(DisplayName = "Tests GetProduct action ")]
+        public async Task Tests_GetProduct()
         {
             var id = Guid.NewGuid();
 
@@ -117,16 +94,50 @@ namespace Ambev.DeveloperEvaluation.Unit.Controller
             (response as ObjectResult)!.Value.Should().NotBeNull();
         }
 
-        [Fact(DisplayName = "Tests GetProductResult action passing an invalid Guid ID")]
-        public async Task Tests_GetProduct_With_Invalid_Id()
+        [Fact(DisplayName = "Tests UpdateProduct")]
+        public async Task Tests_UpdateProduct()
         {
-            var id = Guid.Empty;
 
+            var result = new UpdateProductResult();
 
-            var exception = await Assert.ThrowsAsync<ValidationException>(() => _controller.GetProduct(new GetProductCommand { Id = id}));
+            _mediator.Send(Arg.Any<UpdateProductCommand>()).Returns(result);
 
-            Assert.Contains("Invalid Id", exception.Message);
-            Assert.Single(exception.Errors);
+            var response = await _controller.UpdateProduct(Guid.NewGuid(),new UpdateProductCommand());
+
+            response.Should().NotBeNull();
+            (response as ObjectResult)!.StatusCode.Should().Be(201);
+            (response as ObjectResult)!.Value.Should().NotBeNull();
+            await _mediator.Received(1).Send(Arg.Any<UpdateProductCommand>());
+        }
+
+        [Fact(DisplayName = "Tests list categories")]
+        public async Task Tests_ListCategories()
+        {
+            var result = new List<string> { "cat 1", "cat 2", "cat 3" };
+
+            _mediator.Send(Arg.Any<ListCategoriesCommand>()).Returns(result);
+
+            var response = await _controller.ListCategories();
+
+            response.Should().NotBeNull();
+            (response as ObjectResult)!.StatusCode.Should().Be(201);
+            (response as ObjectResult)!.Value.Should().NotBeNull();
+            await _mediator.Received(1).Send(Arg.Any<ListCategoriesCommand>());
+        }
+
+        [Fact(DisplayName = "Tests list products by category")]
+        public async Task Tests_ListProductsByCategory()
+        {
+            var result = new ListProductsByCategoryResult();
+
+            _mediator.Send(Arg.Any<ListProductsByCategoryCommand>()).Returns(result);
+
+            var response = await _controller.ListProductsByCategory(new ListProductsByCategoryCommand());
+
+            response.Should().NotBeNull();
+            (response as ObjectResult)!.StatusCode.Should().Be(200);
+            (response as ObjectResult)!.Value.Should().NotBeNull();
+            await _mediator.Received(1).Send(Arg.Any<ListProductsByCategoryCommand>());
         }
     }
 }

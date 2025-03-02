@@ -1,26 +1,24 @@
-﻿using Ambev.DeveloperEvaluation.Domain.Entities;
+﻿using Ambev.DeveloperEvaluation.Application.Util;
+using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;
 using MediatR;
+using System.Threading;
 
 namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
 {
-    public class CreateProductHandler : IRequestHandler<CreateProductCommand, CreateProductResult>
+    public class CreateProductHandler : GenericHandler<CreateProductCommand, CreateProductResult, CreateProductCommandValidator>
     {
-        private readonly IProductRepository repository;
-        private readonly IMapper _mapper;
 
-        public CreateProductHandler(IProductRepository repository, IMapper mapper)
+        public CreateProductHandler(IUnitOfWork unitOfWork, IMapper mapper) :base(unitOfWork, mapper)
         {
-            this.repository = repository;
-            _mapper = mapper;
         }
 
-        public async Task<CreateProductResult> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+        public async override Task<CreateProductResult> ExecuteHandlerCode(CreateProductCommand request, CancellationToken cancelation)
         {
             var product = _mapper.Map<Product>(request);
 
-            var result = await repository.CreateAsync(product, cancellationToken);
+            var result = await _unitOfWork.Products.CreateAsync(product, cancelation);
 
             return _mapper.Map<CreateProductResult>(result);
         }
