@@ -19,7 +19,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
 
         public async Task<List<Product>> ListProductsByCategory(string category, int page, int size, string orderBy)
         {
-            var query = _context.Products.AsNoTracking().Where(p => p.Equals(category));
+            var query = _context.Products.AsNoTracking().Where(p => p.Category.Equals(category));
 
             query = !string.IsNullOrEmpty(orderBy) ? query.OrderBy(orderBy) : query;
 

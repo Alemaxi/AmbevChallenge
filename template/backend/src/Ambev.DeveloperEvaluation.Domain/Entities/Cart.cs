@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Ambev.DeveloperEvaluation.Domain.Repositories;
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities
 {
-    internal class Cart
+    public class Cart : IEntity
     {
+        public Guid Id { get; set; }
+        public int UserId { get; set; }
+        public DateTime Date { get; set; }
+        public ICollection<CartProduct> Products { get; set; } = new List<CartProduct>();
     }
 }

@@ -17,7 +17,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IEnti
     public async Task<T> CreateAsync(T entity, CancellationToken cancellationToken = default)
     {
         await _dbSet.AddAsync(entity, cancellationToken);
-        await _context.SaveChangesAsync(cancellationToken);
         return entity;
     }
 
@@ -36,7 +35,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IEnti
         IQueryable<T> query = _dbSet;
 
         // Ordena pelo Id. Você pode melhorar esse mecanismo para ordenar por outras propriedades
-        query = string.IsNullOrEmpty(order) ? query.OrderBy(order) : query;
+        query = !string.IsNullOrEmpty(order) ? query.OrderBy(order) : query;
 
         return await query.Skip((page - 1) * size).Take(size).ToListAsync(cancellationToken);
     }
@@ -44,7 +43,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IEnti
     public async Task<T> UpdateAsync(T entity, CancellationToken cancellationToken = default)
     {
         _dbSet.Update(entity);
-        await _context.SaveChangesAsync(cancellationToken);
         return entity;
     }
 
@@ -55,7 +53,6 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class, IEnti
             return false;
 
         _dbSet.Remove(entity);
-        await _context.SaveChangesAsync(cancellationToken);
         return true;
     }
 }

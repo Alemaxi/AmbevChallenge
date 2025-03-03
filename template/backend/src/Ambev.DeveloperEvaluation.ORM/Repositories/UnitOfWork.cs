@@ -12,6 +12,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
     {
         private readonly DefaultContext _context;
         private IProductRepository _productRepository;
+        private ICartRepository _cartRepository;
 
         public UnitOfWork(DefaultContext context)
         {
@@ -19,6 +20,7 @@ namespace Ambev.DeveloperEvaluation.ORM.Repositories
         }
 
         public IProductRepository Products => _productRepository ??= new ProductRepository(_context);
+        public ICartRepository Carts => _cartRepository ??= new CartRepository(_context);
 
         public async Task<int> CommitAsync(CancellationToken cancellationToken = default)
         {
