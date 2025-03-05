@@ -1,34 +1,34 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.Repositories;
-using Ambev.DeveloperEvaluation.ORM;
 using Ambev.DeveloperEvaluation.ORM.Repositories;
+using Ambev.DeveloperEvaluation.ORM;
 using Ambev.DeveloperEvaluation.Unit.Infrastructure.Fixture;
 using Ambev.DeveloperEvaluation.Unit.Infrastructure.TestData;
-using FluentAssertions;
 using Xunit;
+using FluentAssertions;
 
 namespace Ambev.DeveloperEvaluation.Unit.Infrastructure
 {
-    public class CartRepositoryTest : IClassFixture<InMemoryDatabaseFixture>
+    public class SaleRepositoryTest : IClassFixture<InMemoryDatabaseFixture>
     {
         private readonly InMemoryDatabaseFixture _fixture;
         private readonly DefaultContext _context;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CartRepositoryTest(InMemoryDatabaseFixture fixture)
+        public SaleRepositoryTest(InMemoryDatabaseFixture fixture)
         {
             _fixture = fixture;
             _context = fixture.Context;
 
             _unitOfWork = new UnitOfWork(_context);
-            fixture.GenerateCarts();
+            fixture.GenerateSales();
         }
 
         [Fact(DisplayName = "testing getAll Method")]
         public async Task GetAllTest()
         {
-            var total = _context.Carts.Count();
+            var total = _context.Sales.Count();
 
-            var result = await _unitOfWork.Carts.GetAllAsync();
+            var result = await _unitOfWork.Sales.GetAllAsync();
 
             result.Count().Should().Be(total);
         }
@@ -36,7 +36,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Infrastructure
         [Fact(DisplayName = "testing GetAllPaged for a serch with data")]
         public async Task GetAllPaged()
         {
-            var result = await _unitOfWork.Carts.GetAllPaginatedAsync(1, 10, "");
+            var result = await _unitOfWork.Sales.GetAllPaginatedAsync(1, 10, "");
 
             result.Should().NotBeNull();
             result.Should().HaveCountLessThanOrEqualTo(10);
@@ -45,7 +45,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Infrastructure
         [Fact(DisplayName = "testing GetAllPaged for a serch with no data using page")]
         public async Task GetAllPagedWithNoDataByPage()
         {
-            var result = await _unitOfWork.Carts.GetAllPaginatedAsync(10, 10, "");
+            var result = await _unitOfWork.Sales.GetAllPaginatedAsync(10, 10, "");
 
             result.Should().NotBeNull();
             result.Should().HaveCountLessThanOrEqualTo(10);
@@ -55,7 +55,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Infrastructure
         [Fact(DisplayName = "testing GetAllPaged for a serch with no data using size")]
         public async Task GetAllPagedWithNoDataBySize()
         {
-            var result = await _unitOfWork.Carts.GetAllPaginatedAsync(1, 0, "");
+            var result = await _unitOfWork.Sales.GetAllPaginatedAsync(1, 0, "");
 
             result.Should().NotBeNull();
             result.Should().HaveCountLessThanOrEqualTo(0);
@@ -65,68 +65,68 @@ namespace Ambev.DeveloperEvaluation.Unit.Infrastructure
         [Fact(DisplayName = "testing GetAllPaged Ordered")]
         public async Task GetAllPagedWithOrdering()
         {
-            var result = await _unitOfWork.Carts.GetAllPaginatedAsync(1, 10, "Date Desc");
+            var result = await _unitOfWork.Sales.GetAllPaginatedAsync(1, 10, "SaleDate Desc");
 
             result.Should().NotBeNull();
             result.Should().HaveCountLessThanOrEqualTo(10);
-            result.First().Date.Should().BeAfter(result.Last().Date);
+            result.First().SaleDate.Should().BeAfter(result.Last().SaleDate);
         }
 
 
-        [Fact(DisplayName = "testing Getting a card by id")]
-        public async Task GetCartById()
+        [Fact(DisplayName = "testing Getting a Sale by id")]
+        public async Task GetSaleById()
         {
-            var cart = _context.Carts.FirstOrDefault();
+            var sale = _context.Sales.FirstOrDefault();
 
-            var result = await _unitOfWork.Carts.GetByIdAsync(cart.Id);
+            var result = await _unitOfWork.Sales.GetByIdAsync(sale.Id);
 
             result.Should().NotBeNull();
-            result.Should().Be(cart);
+            result.Should().Be(sale);
         }
 
-        [Fact(DisplayName = "testing Creating a card")]
-        public async Task CreateACart()
+        [Fact(DisplayName = "testing Creating a Sale")]
+        public async Task CreateASale()
         {
-            var cart = CartRepositoryTestData.GenerateValidCart();
+            var sale = SaleRepositoryTestData.GenerateValidSale();
 
-            var result = await _unitOfWork.Carts.CreateAsync(cart);
+            var result = await _unitOfWork.Sales.CreateAsync(sale);
             await _unitOfWork.CommitAsync();
 
             result.Should().NotBeNull();
-            _context.Carts.FirstOrDefault(c => cart.Id == c.Id).Should().NotBeNull();
+            _context.Sales.FirstOrDefault(s => sale.Id == s.Id).Should().NotBeNull();
 
-            _context.Remove(cart);
+            _context.Remove(sale);
             _context.SaveChanges();
         }
 
 
-        [Fact(DisplayName = "testing Updating a card")]
-        public async Task UpdateACart()
+        [Fact(DisplayName = "testing Updating a Sale")]
+        public async Task UpdateASale()
         {
-            var cart = _context.Carts.FirstOrDefault();
+            var sale = _context.Sales.FirstOrDefault();
 
-            var oldDate = cart.Date;
+            var oldDate = sale.SaleDate;
 
-            cart.Date = cart.Date.AddDays(2);
+            sale.SaleDate = sale.SaleDate.AddDays(2);
 
-            var result = await _unitOfWork.Carts.UpdateAsync(cart);
+            var result = await _unitOfWork.Sales.UpdateAsync(sale);
             await _unitOfWork.CommitAsync();
 
             result.Should().NotBeNull();
-            _context.Carts.FirstOrDefault(c => cart.Id == c.Id)!.Date.Should().NotBe(oldDate);
+            _context.Sales.FirstOrDefault(s => sale.Id == s.Id)!.SaleDate.Should().NotBe(oldDate);
 
         }
 
 
-        [Fact(DisplayName = "testing Deleting a card")]
+        [Fact(DisplayName = "testing Deleting a Sale")]
         public async Task DeleteACart()
         {
-            var cart = _context.Carts.FirstOrDefault();
+            var sale = _context.Sales.FirstOrDefault();
 
-            var result = await _unitOfWork.Carts.DeleteAsync(cart.Id);
+            var result = await _unitOfWork.Sales.DeleteAsync(sale.Id);
             await _unitOfWork.CommitAsync();
 
-            _context.Carts.Add(cart);
+            _context.Sales.Add(sale);
             _context.SaveChanges();
         }
     }

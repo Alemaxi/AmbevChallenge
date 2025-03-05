@@ -1,4 +1,5 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.Common;
+using System.ComponentModel.DataAnnotations;
 
 namespace Ambev.DeveloperEvaluation.Domain.Entities
 {
@@ -43,5 +44,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Entities
         /// Data da última atualização do registro.
         /// </summary>
         public DateTime? UpdatedAt { get; set; }
+
+        public virtual IEnumerable<SaleItem> SaleItems { get; set; }
     }
 }

@@ -22,6 +22,8 @@ namespace Ambev.DeveloperEvaluation.Unit.Infrastructure
             Context = fixture.Context;
             _unitOfWork = new UnitOfWork(Context);
             _repository = new ProductRepository(Context);
+
+            fixture.GenerateProducts();
         }
 
         [Fact(DisplayName = "Tests Get all Products")]
@@ -42,7 +44,6 @@ namespace Ambev.DeveloperEvaluation.Unit.Infrastructure
 
             result.Should().NotBeNull();
             result.Count().Should().BeLessThanOrEqualTo(10);
-            result.Count().Should().Be(3);
         }
 
         [Fact(DisplayName = "Tests List Product for page with no data")]

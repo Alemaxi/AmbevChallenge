@@ -9,6 +9,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Infrastructure.Fixture
     public class InMemoryDatabaseFixture : IDisposable
     {
         public DefaultContext Context { get; private set; }
+        private bool _seeded = false;
 
         public InMemoryDatabaseFixture()
         {
@@ -17,7 +18,6 @@ namespace Ambev.DeveloperEvaluation.Unit.Infrastructure.Fixture
                 .Options;
 
             Context = new DefaultContext(options);
-            GenerateProducts();
         }
 
         public void Dispose()
@@ -27,7 +27,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Infrastructure.Fixture
         }
 
 
-        private void GenerateProducts()
+        public void GenerateProducts()
         {
             Context.Products.AddRange(new List<Product>
             {
@@ -36,9 +36,23 @@ namespace Ambev.DeveloperEvaluation.Unit.Infrastructure.Fixture
                 ProductRepositoryTestData.GenerateValidProduct()
             });
 
+            Context.SaveChanges();
+            _seeded = true;
+        }
+        public void GenerateCarts()
+        {
             Context.Carts.AddRange(CartRepositoryTestData.GenerateValidCarts(5));
 
             Context.SaveChanges();
+            _seeded = true;
+        }
+
+        public void GenerateSales()
+        {
+            Context.Sales.AddRange(SaleRepositoryTestData.GenerateValidSales(5));
+
+            Context.SaveChanges();
+            _seeded = true;
         }
     }
 }

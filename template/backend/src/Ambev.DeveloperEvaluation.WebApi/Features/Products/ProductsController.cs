@@ -72,10 +72,10 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products
         {
             var result = await _mediator.Send(new ListCategoriesCommand());
 
-            return Created(string.Empty, new ApiResponseWithData<List<string>>
+            return Ok(new ApiResponseWithData<List<string>>
             {
                 Success = true,
-                Message = "Product created successfully",
+                Message = "Product modified successfully",
                 Data = result
             });
         }

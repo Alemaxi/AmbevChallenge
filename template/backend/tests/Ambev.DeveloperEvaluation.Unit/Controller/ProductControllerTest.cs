@@ -120,7 +120,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Controller
             var response = await _controller.ListCategories();
 
             response.Should().NotBeNull();
-            (response as ObjectResult)!.StatusCode.Should().Be(201);
+            (response as ObjectResult)!.StatusCode.Should().Be(200);
             (response as ObjectResult)!.Value.Should().NotBeNull();
             await _mediator.Received(1).Send(Arg.Any<ListCategoriesCommand>());
         }
