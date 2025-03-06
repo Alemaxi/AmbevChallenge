@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Ambev.DeveloperEvaluation.Application.Sale.ListSalesPaged
+namespace Ambev.DeveloperEvaluation.Application.Sales.ListSalesPaged
 {
     public class ListSalesPagedCommandValidator : AbstractValidator<ListSalesPagedCommand>
     {

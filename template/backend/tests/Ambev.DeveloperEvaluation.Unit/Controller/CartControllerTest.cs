@@ -1,7 +1,7 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Carts.CreateCart;
 using Ambev.DeveloperEvaluation.Application.Carts.GetCart;
 using Ambev.DeveloperEvaluation.Application.Carts.ListCartsPaged;
-using Ambev.DeveloperEvaluation.Application.Carts.Shared.CartResult;
+using Ambev.DeveloperEvaluation.Application.Carts.Shared.Results;
 using Ambev.DeveloperEvaluation.Application.Carts.UpdateCart;
 using Ambev.DeveloperEvaluation.WebApi.Features.Carts;
 using FluentAssertions;
@@ -81,7 +81,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Controller
 
             _mediator.Send(Arg.Any<UpdateCartCommand>()).Returns(new UpdateCartResult());
 
-            var response = await _controller.Updatecart(command);
+            var response = await _controller.Updatecart(Guid.NewGuid(),command);
 
             response.Should().NotBeNull();
             (response as ObjectResult)!.StatusCode.Should().Be(200);

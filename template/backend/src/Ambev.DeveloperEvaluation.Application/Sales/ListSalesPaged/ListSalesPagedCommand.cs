@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Ambev.DeveloperEvaluation.Application.Sale.ListSalesPaged
+namespace Ambev.DeveloperEvaluation.Application.Sales.ListSalesPaged
 {
     public class ListSalesPagedCommand : IRequest<ListSalesPagedResult>
     {

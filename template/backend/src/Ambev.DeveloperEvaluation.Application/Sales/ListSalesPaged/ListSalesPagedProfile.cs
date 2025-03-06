@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ambev.DeveloperEvaluation.Application.Sale.ListSalesPaged
+namespace Ambev.DeveloperEvaluation.Application.Sales.ListSalesPaged
 {
-    internal class ListSalesPagedProfile
+    public class ListSalesPagedProfile
     {
     }
 }

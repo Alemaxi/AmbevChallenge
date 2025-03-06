@@ -18,7 +18,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Infrastructure.TestData
         // Faker para Cart
         private static readonly Faker<Cart> cartFaker = new Faker<Cart>()
             .RuleFor(c => c.Id, f => Guid.NewGuid())
-            .RuleFor(c => c.UserId, f => f.Random.Int(1, 1000))
+            .RuleFor(c => c.UserId, f => Guid.NewGuid())
             .RuleFor(c => c.Date, f => f.Date.Past())
             .RuleFor(c => c.Products, f =>
                 // Gera entre 1 e 5 itens para o carrinho

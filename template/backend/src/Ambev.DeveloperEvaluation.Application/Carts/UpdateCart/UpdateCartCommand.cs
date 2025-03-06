@@ -6,13 +6,15 @@ namespace Ambev.DeveloperEvaluation.Application.Carts.UpdateCart
 {
     public class UpdateCartCommand : IRequest<UpdateCartResult>
     {
-        [FromRoute(Name = "id")]
-        public Guid Id { get; set; }
-        [FromBody]
+        public Guid Id { get; private set; }
         public int UserId { get; set; }
-        [FromBody]
         public DateTime Date { get; set; }
-        [FromBody]
         public ICollection<CartProductCommand> Products { get; set; } = new List<CartProductCommand>();
+
+
+        public void SetId(Guid id)
+        {
+            Id = id;
+        }
     }
 }

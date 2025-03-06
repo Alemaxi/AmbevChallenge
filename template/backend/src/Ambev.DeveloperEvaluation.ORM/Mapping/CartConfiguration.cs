@@ -1,6 +1,7 @@
 ﻿using Ambev.DeveloperEvaluation.Domain.Entities;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using Ambev.DeveloperEvaluation.Domain.Repositories;
 
 namespace Ambev.DeveloperEvaluation.ORM.Mapping
 {
@@ -27,6 +28,11 @@ namespace Ambev.DeveloperEvaluation.ORM.Mapping
                    .WithOne(cp => cp.Cart)
                    .HasForeignKey(cp => cp.CartId)
                    .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(c => c.User)
+              .WithMany(u => u.Carts)  // Caso tenha a coleção no User; senão, use .WithMany() sem parâmetro.
+              .HasForeignKey(c => c.UserId)
+              .IsRequired();
         }
     }
 }

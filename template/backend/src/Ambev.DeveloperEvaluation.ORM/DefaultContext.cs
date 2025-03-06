@@ -24,6 +24,71 @@ public class DefaultContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(modelBuilder);
     }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var addedSales = ChangeTracker.Entries<Sale>()
+                           .Where(e => e.State == EntityState.Added)
+                           .Select(e => e.Entity)
+                           .ToList();
+
+        var modifiedSales = ChangeTracker.Entries<Sale>()
+                           .Where(e => e.State == EntityState.Modified && !e.Entity.IsCancelled)
+                           .Select(e => e.Entity)
+                           .ToList();
+
+        var deletedSales = ChangeTracker.Entries<Sale>()
+                           .Where(e => e.State == EntityState.Deleted)
+                           .Select(e => e.Entity)
+                           .ToList();
+
+        var canceledSales = ChangeTracker.Entries<Sale>()
+                           .Where(e => e.State == EntityState.Modified && e.Entity.IsCancelled)
+                           .Select(e => e.Entity)
+                           .ToList();
+
+        var result = base.SaveChangesAsync(cancellationToken);
+
+        OnSaleCanceled(canceledSales);
+        OnSaleDeleted(deletedSales);
+        OnSaleInserted(addedSales);
+        OnSaleModified(modifiedSales);
+
+
+        return result;
+    }
+
+    private void OnSaleInserted(List<Sale> sales)
+    {
+        foreach (var sale in sales)
+        {
+            Console.WriteLine($"Sale {sale.Id} inserted");
+        }
+    }
+
+    private void OnSaleModified(List<Sale> sales)
+    {
+        foreach (var sale in sales)
+        {
+            Console.WriteLine($"Sale {sale.Id} modified");
+        }
+    }
+
+    private void OnSaleDeleted(List<Sale> sales)
+    {
+        foreach (var sale in sales)
+        {
+            Console.WriteLine($"Sale {sale.Id} deleted");
+        }
+    }
+
+    private void OnSaleCanceled(List<Sale> sales)
+    {
+        foreach (var sale in sales)
+        {
+            Console.WriteLine($"Sale {sale.Id} canceled");
+        }
+    }
 }
 public class YourDbContextFactory : IDesignTimeDbContextFactory<DefaultContext>
 {

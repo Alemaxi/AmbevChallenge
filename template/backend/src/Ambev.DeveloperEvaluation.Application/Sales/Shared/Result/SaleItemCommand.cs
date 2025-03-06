@@ -1,4 +1,4 @@
-﻿namespace Ambev.DeveloperEvaluation.Application.Sale.Shared.result
+﻿namespace Ambev.DeveloperEvaluation.Application.Sales.Shared.result
 {
     public class SaleItemResult
     {

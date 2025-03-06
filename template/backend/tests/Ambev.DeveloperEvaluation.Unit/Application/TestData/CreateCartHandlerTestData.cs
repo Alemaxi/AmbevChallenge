@@ -7,7 +7,7 @@ namespace Ambev.DeveloperEvaluation.Unit.Application.TestData
     public static class CreateCartHandlerTestData
     {
         private static readonly Faker<CreateCartCommand> createCartHandlerFaker = new Faker<CreateCartCommand>()
-        .RuleFor(c => c.UserId, f => f.Random.Int(1, 1000))
+        .RuleFor(c => c.UserId, Guid.NewGuid)
         .RuleFor(c => c.Date, f => f.Date.Recent())
         .RuleFor(c => c.Products, f =>
         {

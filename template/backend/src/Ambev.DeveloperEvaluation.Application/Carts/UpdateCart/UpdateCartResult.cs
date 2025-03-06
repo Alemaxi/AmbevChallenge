@@ -1,4 +1,4 @@
-﻿using Ambev.DeveloperEvaluation.Application.Carts.Shared.CartResult;
+﻿using Ambev.DeveloperEvaluation.Application.Carts.Shared.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;

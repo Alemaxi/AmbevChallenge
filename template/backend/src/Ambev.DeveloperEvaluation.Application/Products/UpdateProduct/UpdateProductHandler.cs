@@ -19,7 +19,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.UpdateProduct
             var entity = _mapper.Map<Product>(Request);
 
             var result = await _unitOfWork.Products.UpdateAsync(entity);
-            await _unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync(cancellation);
 
             return _mapper.Map<UpdateProductResult>(result);
         }

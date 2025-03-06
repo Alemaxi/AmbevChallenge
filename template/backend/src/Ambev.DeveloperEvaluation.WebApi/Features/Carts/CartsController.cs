@@ -2,7 +2,7 @@
 using Ambev.DeveloperEvaluation.Application.Carts.DeleteCart;
 using Ambev.DeveloperEvaluation.Application.Carts.GetCart;
 using Ambev.DeveloperEvaluation.Application.Carts.ListCartsPaged;
-using Ambev.DeveloperEvaluation.Application.Carts.Shared.CartResult;
+using Ambev.DeveloperEvaluation.Application.Carts.Shared.Results;
 using Ambev.DeveloperEvaluation.Application.Carts.UpdateCart;
 using Ambev.DeveloperEvaluation.WebApi.Common;
 using MediatR;
@@ -53,9 +53,10 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Carts
             });
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Updatecart(UpdateCartCommand command)
+        [HttpPut("id")]
+        public async Task<IActionResult> Updatecart([FromRoute] Guid id, [FromBody] UpdateCartCommand command)
         {
+            command.SetId(id);
             var result = await _mediator.Send(command);
 
             return Ok(new ApiResponseWithData<CartResult>
@@ -66,7 +67,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Carts
             });
         }
 
-        [HttpDelete]
+        [HttpDelete("id")]
         public Task<IActionResult> DeleteCart(DeleteCartCommand command)
         {
             throw new NotImplementedException();

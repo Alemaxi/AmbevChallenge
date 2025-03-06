@@ -19,6 +19,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.CreateProduct
             var product = _mapper.Map<Product>(request);
 
             var result = await _unitOfWork.Products.CreateAsync(product, cancelation);
+            await _unitOfWork.CommitAsync(cancelation);
 
             return _mapper.Map<CreateProductResult>(result);
         }

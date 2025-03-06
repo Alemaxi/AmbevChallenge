@@ -1,5 +1,5 @@
 ﻿using Ambev.DeveloperEvaluation.Application.Carts.GetCart;
-using Ambev.DeveloperEvaluation.Application.Carts.Shared.CartResult;
+using Ambev.DeveloperEvaluation.Application.Carts.Shared.Results;
 using Ambev.DeveloperEvaluation.Domain.Entities;
 using Ambev.DeveloperEvaluation.Domain.Repositories;
 using AutoMapper;

@@ -5,7 +5,7 @@ namespace Ambev.DeveloperEvaluation.Application.Products.UpdateProduct
 {
     public class UpdateProductProfile : Profile
     {
-        public UpdateProductProfile(string profileName) : base(profileName)
+        public UpdateProductProfile()
         {
             CreateMap<UpdateProductCommand, Product>();
             CreateMap<Product, UpdateProductResult>();

@@ -29,7 +29,12 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products
         {
             var result = await _mediator.Send(command);
 
-            return Ok(result);
+            return Ok(new ApiResponseWithData<GetProductResult>
+            {
+                Success = true,
+                Message = "Product modified successfully",
+                Data = result
+            });
         }
 
         [HttpGet("list")]
@@ -53,10 +58,10 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products
             });
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("id")]
         public async Task<IActionResult> UpdateProduct([FromRoute] Guid id, [FromBody] UpdateProductCommand productCommand)
         {
-            productCommand.Id = id;
+            productCommand.SetId(id);
             var result = await _mediator.Send(productCommand);
 
             return Created(string.Empty, new ApiResponseWithData<UpdateProductResult>
@@ -67,7 +72,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products
             });
         }
 
-        [HttpPut("categories")]
+        [HttpGet("categories")]
         public async Task<IActionResult> ListCategories()
         {
             var result = await _mediator.Send(new ListCategoriesCommand());
@@ -80,7 +85,7 @@ namespace Ambev.DeveloperEvaluation.WebApi.Features.Products
             });
         }
 
-        [HttpPut("category/{category}")]
+        [HttpGet("category/{category}")]
         public async Task<IActionResult> ListProductsByCategory(ListProductsByCategoryCommand command)
         {
             var result = await _mediator.Send(command);

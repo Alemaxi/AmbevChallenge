@@ -1,12 +1,13 @@
-﻿using Ambev.DeveloperEvaluation.Application.Sale.Shared.result;
+﻿using Ambev.DeveloperEvaluation.Application.Sales.Shared.result;
 
-namespace Ambev.DeveloperEvaluation.Application.Sale.Shared.Result
+namespace Ambev.DeveloperEvaluation.Application.Sales.Shared.Result
 {
     public class SaleResult
     {
+        public Guid Id { get; set; }
         public DateTime SaleDate { get; set; }
 
-        public Guid CustomerId { gt; set; }
+        public Guid CustomerId { get; set; }
 
         public string Branch { get; set; } = string.Empty;
 

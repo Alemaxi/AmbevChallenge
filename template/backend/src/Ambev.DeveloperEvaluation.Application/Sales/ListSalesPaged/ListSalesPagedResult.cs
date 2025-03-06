@@ -10,6 +10,6 @@ namespace Ambev.DeveloperEvaluation.Application.Sales.ListSalesPaged
     public class ListSalesPagedResult
     {
         public int TotalOfRegisters { get; set; }
-        public List<SaleResult> Sale { get; set; }
+        public List<SaleResult> Sales { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Ambev.DeveloperEvaluation.Application.Carts.Shared.CartResult
+﻿namespace Ambev.DeveloperEvaluation.Application.Carts.Shared.Results
 {
     public class CartResult
     {

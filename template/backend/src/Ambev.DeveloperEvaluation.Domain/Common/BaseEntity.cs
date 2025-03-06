@@ -5,7 +5,7 @@ namespace Ambev.DeveloperEvaluation.Domain.Common;
 
 public class BaseEntity : IComparable<BaseEntity>, IEntity
 {
-    public Guid Id { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
 
     public Task<IEnumerable<ValidationErrorDetail>> ValidateAsync()
     {

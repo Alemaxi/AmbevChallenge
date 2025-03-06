@@ -42,7 +42,6 @@ namespace Ambev.DeveloperEvaluation.Unit.Infrastructure.TestData
         public static SaleItem GenerateValidSaleItem()
         {
             var f = new Faker();
-            // Cria um novo produto
             var product = new Product
             {
                 Id =Guid.NewGuid(),
