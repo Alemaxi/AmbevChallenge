@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Ambev.DeveloperEvaluation.Application.Util
 {
-    public abstract class GenericHandler<T, V, U> : IRequestHandler<T, V> where U : AbstractValidator<T> where T : IRequest<V>
+    public abstract class GenericHandler<TCommand, TValidator, TInstantiate> : IRequestHandler<TCommand, TValidator> where TInstantiate : AbstractValidator<TCommand> where TCommand : IRequest<TValidator>
     {
         protected readonly IUnitOfWork _unitOfWork;
         protected readonly IMapper _mapper;
@@ -17,15 +17,15 @@ namespace Ambev.DeveloperEvaluation.Application.Util
             _mapper = mapper;
         }
 
-        public async Task<V> Handle(T request, CancellationToken cancellationToken)
+        public async Task<TValidator> Handle(TCommand request, CancellationToken cancellationToken)
         {
-            U a = typeof(U).CreateInstance<U>();
+            TInstantiate a = typeof(TInstantiate).CreateInstance<TInstantiate>();
 
             await a.ValidateAndThrowAsync(request);
 
             return await ExecuteHandlerCode(request, cancellationToken);
         }
 
-        public abstract Task<V> ExecuteHandlerCode(T request, CancellationToken cancelation);
+        public abstract Task<TValidator> ExecuteHandlerCode(TCommand request, CancellationToken cancelation);
     }
 }
